@@ -27,4 +27,9 @@
     <string name="contacts">Contacts</string>
     <string name="logout">Logout</string>
     <string name="shopping">Shopping</string>
+    <string name="profile_name">Name</string>
+    <string name="profile_lastname">Lastname</string>
+    <string name="profile_mobile">Mobile</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_telephone">Telephone</string>
 </resources>

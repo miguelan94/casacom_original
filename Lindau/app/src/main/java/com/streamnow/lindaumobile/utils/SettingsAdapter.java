@@ -56,15 +56,49 @@ public class SettingsAdapter extends BaseAdapter {
 
         LinearLayout row_settings_bgnd = (LinearLayout)convertView.findViewById(R.id.row_settings_bgnd);
         row_settings_bgnd.setBackgroundColor(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.colorService);
-        //IMenuPrintable menuPrintable = items.get(position);
         ImageView imageView = (ImageView) convertView.findViewById(R.id.row_settings_icon);
         TextView textView = (TextView) convertView.findViewById(R.id.row_settings_text);
         textView.setTextColor(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.fontColorSmartphone);
-        Picasso.with(context)
-                .load(R.drawable.profile)
-                .into(imageView);
-        // imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_name));
-        textView.setText(items.get(position));
+        /*if(position==0){
+            Picasso.with(context)
+                    .load(R.drawable.profile)
+                    .into(imageView);
+            // imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_name));
+            textView.setText(items.get(position));
+        }else if(position==1){
+            Picasso.with(context)
+                    .load(R.drawable.general_docs_icon)
+                    .into(imageView);
+            // imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_name));
+            textView.setText(items.get(position));
+        } else if(position==2){
+            Picasso.with(context)
+                    .load(R.drawable.logout)
+                    .into(imageView);
+            // imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_name));
+            textView.setText(items.get(position));
+        } else if(position==3){
+            Picasso.with(context)
+                    .load(R.drawable.ic_action_name)
+                    .into(imageView);
+            // imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_name));
+            textView.setText(items.get(position));
+        }*/
+
+
+        if(position==0){
+            imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.profile));
+            textView.setText(items.get(position));
+        }else if(position==1){
+            imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.general_docs_icon));
+            textView.setText(items.get(position));
+        } else if(position==2){
+            imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.logout));
+            textView.setText(items.get(position));
+        } else if(position==3){
+            imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_name));
+            textView.setText(items.get(position));
+        }
 
         return convertView;
     }

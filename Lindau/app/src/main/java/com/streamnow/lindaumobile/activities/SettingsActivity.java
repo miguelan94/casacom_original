@@ -3,17 +3,22 @@ package com.streamnow.lindaumobile.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.squareup.picasso.Picasso;
 import com.streamnow.lindaumobile.R;
 import com.streamnow.lindaumobile.datamodel.LDSessionUser;
 import com.streamnow.lindaumobile.lib.LDConnection;
@@ -66,8 +71,13 @@ public class SettingsActivity extends Activity {
 
     private void menuItemClicked(int position){
         if(position==0){ //profile clicked
-            progressDialog = ProgressDialog.show(this, getString(R.string.app_name), getString(R.string.please_wait), true);
-            RequestParams requestParams = new RequestParams();
+            Intent i = new Intent(this,ProfileActivity.class);
+            startActivity(i);
+
+
+
+            //progressDialog = ProgressDialog.show(this, getString(R.string.app_name), getString(R.string.please_wait), true);
+           /* RequestParams requestParams = new RequestParams();
             requestParams.add("uid", sessionUser.deviceSessionId);
             //requestParams.add("password", "");
             requestParams.add("source", "Mobile");
@@ -79,17 +89,8 @@ public class SettingsActivity extends Activity {
                 {
                      Log.d("JSON", "JSONObject OK: " + response.toString());
 
-                    LDSessionUser sessionUser;
 
-                    try
-                    {
-                        sessionUser = new LDSessionUser(response);
-                    }
-                    catch(Exception e)
-                    {
-                        sessionUser = null;
-                        e.printStackTrace();
-                    }
+
 
                     progressDialog.dismiss();
                 }
@@ -105,7 +106,7 @@ public class SettingsActivity extends Activity {
                     System.out.println("login onFailure json");
                     progressDialog.dismiss();
                 }
-            });
+            });*/
 
         }else if(position==1){//contacts
 

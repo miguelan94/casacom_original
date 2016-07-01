@@ -5,6 +5,7 @@
     <string name="password_hint">Password</string>
     <string name="username_hint">Username</string>
     <string name="login_button_title1">Enter Without Login</string>
+    <string name="reset_button_title">Reset Password</string>
     <string name="login_button_title2">Login</string>
     <string name="please_wait">Please, wait...</string>
     <string name="network_error">There was a network error. Please, try again later.</string>
@@ -32,4 +33,6 @@
     <string name="profile_mobile">Mobile</string>
     <string name="profile_email">Email</string>
     <string name="profile_telephone">Telephone</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
 </resources>

@@ -81,15 +81,32 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/loginButton"
+
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginBottom="75dp"
-        android:text="@string/login_button_title1"
-        android:textColor="#fff"
-        android:textSize="16dp"
-        android:background="@drawable/login_button_states"
-        android:layout_weight="0.01" />
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/resetButton"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginBottom="25dp"
+            android:text="@string/reset_button_title"
+            android:textColor="#fff"
+            android:textSize="16dp"
+            android:background="@drawable/login_button_states"
+             />
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginBottom="75dp"
+            android:text="@string/login_button_title1"
+            android:textColor="#fff"
+            android:textSize="16dp"
+            android:background="@drawable/login_button_states"
+            android:layout_weight="0.01" />
+    </LinearLayout>
 
 </LinearLayout>

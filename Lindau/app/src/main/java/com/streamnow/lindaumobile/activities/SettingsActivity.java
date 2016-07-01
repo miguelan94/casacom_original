@@ -123,6 +123,7 @@ public class SettingsActivity extends Activity {
                 {
                     //Log.d("JSON", "JSONObject OK: " + response.toString());
                     Intent i = new Intent(SettingsActivity.this,LoginActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
 
                 }

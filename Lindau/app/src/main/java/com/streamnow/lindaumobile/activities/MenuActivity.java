@@ -17,14 +17,23 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.streamnow.lindaumobile.datamodel.LDService;
 import com.streamnow.lindaumobile.interfaces.IMenuPrintable;
+import com.streamnow.lindaumobile.lib.LDConnection;
 import com.streamnow.lindaumobile.utils.Lindau;
 import com.streamnow.lindaumobile.utils.MenuAdapter;
 import com.streamnow.lindaumobile.R;
 import com.streamnow.lindaumobile.datamodel.LDSessionUser;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+
+import cz.msebera.android.httpclient.Header;
 
 public class MenuActivity extends BaseActivity
 {
@@ -38,6 +47,39 @@ public class MenuActivity extends BaseActivity
         setContentView(R.layout.activity_main_menu);
 
         categoryId = this.getIntent().getStringExtra("category_id");
+
+        /*
+        if(categoryId.equals("5")){
+                //call API vodka
+            RequestParams requestParams = new RequestParams();
+            requestParams.add("appId","5033d287e70e42f0a5a9f44001cb2d");
+            requestParams.add("userId",getIntent().getStringExtra("user_vodka"));
+            requestParams.add("password",getIntent().getStringExtra("pass_vodka"));
+            LDConnection.post("https://project-test.streamnow.ch/external/client/core/Login.do?appId=",requestParams,new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response)
+                {
+                    ///obtenemos token y url
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    System.out.println("onFailure json");
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    System.out.println("onFailure array");
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
+                }
+            });
+        }
+        */
+
 
         ArrayList<? extends IMenuPrintable> adapterArray;
 
@@ -89,6 +131,20 @@ public class MenuActivity extends BaseActivity
 
             if (service.type.equals("2"))
             {
+
+
+                if(service.id.equals("29")){ //Tv
+
+                }
+                else if(service.id.equals("57")){ //music
+
+                }
+                else if(service.id.equals("59")){ //tv on demand
+
+                }
+                else if(service.id.equals("60")){ //my recordings
+
+                }
                 Intent intent = new Intent(this, WebViewActivity.class);
                 intent.putExtra("api_url", service.apiUrl);
                 intent.putExtra("service_id", service.id);
@@ -110,8 +166,9 @@ public class MenuActivity extends BaseActivity
 
             if (services.size() == 1)
             {
-                LDService service = (LDService) services.get(0);
 
+                LDService service = (LDService) services.get(0);
+                    //check service type
                 if (service.type.equals("1"))
                 {
                     if( service.id.equals("53") )
@@ -143,7 +200,42 @@ public class MenuActivity extends BaseActivity
             }
             else if (services.size() > 1)
             {
-                Intent intent = new Intent(this, MenuActivity.class);
+                final Intent intent = new Intent(this, MenuActivity.class);
+                if(sessionUser.categories.get(position).id.equals("5")){//entertainment
+
+                    //System.out.println("Entertainment clicked, api_url--->" + service.apiUrl);
+                    final RequestParams requestParams = new RequestParams("access_token",sessionUser.accessToken);
+                    LDConnection.post("myentertaiment/getCredentials",requestParams,new JsonHttpResponseHandler(){
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response)
+                        {
+                            //Obtenemos username y password
+                            Log.d("JSON","JSON OK: " + response.toString());
+                            try{
+                                intent.putExtra("user_vodka",response.getString(""));
+                                intent.putExtra("pass_vodka",response.getString(""));
+                            }
+                            catch (JSONException e){
+                               e.printStackTrace();
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            System.out.println("onFailure json");
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                            System.out.println("onFailure array");
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
+                        }
+                    });
+                }
                 intent.putExtra("category_id", sessionUser.categories.get(position).id);
                 intent.putExtra("sub_menu", true);
                 startActivity(intent);

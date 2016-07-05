@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
+import android.provider.Contacts;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.streamnow.lindaumobile.lib.LDConnection;
 import com.streamnow.lindaumobile.utils.Lindau;
 import com.streamnow.lindaumobile.utils.SettingsAdapter;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class SettingsActivity extends Activity {
     protected final LDSessionUser sessionUser = Lindau.getInstance().getCurrentSessionUser();
     protected ArrayList<String> items;
     private ProgressDialog progressDialog;
+    private static final int PICK_CONTACT_REQUEST = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,8 +113,9 @@ public class SettingsActivity extends Activity {
 
         }else if(position==1){//contacts
 
-            //Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-            //startActivityForResult(intent, 5);
+            Intent intent= new Intent(Intent.ACTION_PICK,  ContactsContract.Contacts.CONTENT_URI);
+            intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+            startActivityForResult(intent,PICK_CONTACT_REQUEST);
         }else if(position==2){//logout
 
             RequestParams requestParams = new RequestParams();
@@ -122,9 +126,17 @@ public class SettingsActivity extends Activity {
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response)
                 {
                     //Log.d("JSON", "JSONObject OK: " + response.toString());
-                    Intent i = new Intent(SettingsActivity.this,LoginActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
+                    try{
+                        if(response.getString("msg").equals("Logout OK")){
+                            Intent i = new Intent(SettingsActivity.this,LoginActivity.class);
+                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(i);
+                        }
+                    }
+                    catch (JSONException e){
+                        e.printStackTrace();
+                    }
+                    System.out.println("response: " + response.toString());
 
                 }
 
@@ -141,6 +153,46 @@ public class SettingsActivity extends Activity {
 
         }else if(position==3){//shopping
 
+            RequestParams requestParams = new RequestParams();
+            //requestParams.add("access_token",sessionUser.accessToken);
+            LDConnection.post("getNotifications", requestParams, new JsonHttpResponseHandler()
+            {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response)
+                {
+                    System.out.println("Respuesta: " + response.toString());
+                    try{
+                        if(response.getString("status").equals("ok")){
+
+                        }
+                    }catch (JSONException e){
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
+                    System.out.println("login onFailure throwable: " + throwable.toString() + " status code = " + statusCode);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    System.out.println("login onFailure json");
+                }
+            });
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,Intent data){
+
+        if (requestCode == PICK_CONTACT_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                // The user picked a contact.
+                // The Intent's data Uri identifies which contact was selected.
+                // Do something with the contact here (bigger example below)
+
+            }
         }
     }
 }

@@ -21,16 +21,16 @@
 
         <ScrollView
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:fillViewport="true"
             android:scrollbars = "vertical"
-            android:scrollbarStyle="insideInset"
-            android:id="@+id/scrollView" >
+            android:id="@+id/scrollView">
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp">
 
                 <LinearLayout
                     android:orientation="vertical"

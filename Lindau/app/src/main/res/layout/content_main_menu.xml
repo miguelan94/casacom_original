@@ -37,7 +37,7 @@
             android:id="@+id/settings_ico"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/i_setting1x"
+            android:src="@drawable/i_settings3x"
             android:layout_above="@+id/main_menu_list_view"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/linearLayout" />

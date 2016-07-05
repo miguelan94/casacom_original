@@ -245,8 +245,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener
 
         if( userEditText.getText().toString().isEmpty()  && passwdEditText.getText().toString().isEmpty() )
         {
-            username = Lindau.getInstance().appDemoAccount;
-            password = Lindau.getInstance().appDemoAccount;
+            //username = Lindau.getInstance().appDemoAccount;
+            //password = Lindau.getInstance().appDemoAccount;
+            username = "lfabo";
+            password = "12345678";
         }
         else
         {

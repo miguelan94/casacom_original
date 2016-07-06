@@ -3,8 +3,11 @@ package com.streamnow.lindaumobile.activities;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -141,7 +144,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener
     {
         if( (int)v.getTag() == LOGIN_BUTTON_TAG )
         {
-            this.loginButtonClicked(v);
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if(activeNetworkInfo!=null && activeNetworkInfo.isConnected()){
+                this.loginButtonClicked(v);
+            }
+            else{
+                showAlertDialog("No internet connection");
+            }
         }
         if((int)v.getTag() == RESET_BUTTON_TAG){
             resetButtonClicked(v);
@@ -245,10 +255,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener
 
         if( userEditText.getText().toString().isEmpty()  && passwdEditText.getText().toString().isEmpty() )
         {
-            //username = Lindau.getInstance().appDemoAccount;
-            //password = Lindau.getInstance().appDemoAccount;
-            username = "lfabo";
-            password = "12345678";
+            username = Lindau.getInstance().appDemoAccount;
+            password = Lindau.getInstance().appDemoAccount;
+            //username = "lfabo";
+            //password = "12345678";
         }
         else
         {

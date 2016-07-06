@@ -35,4 +35,8 @@
     <string name="profile_telephone">Telephone</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
+    <string name="date_event">Date</string>
+    <string name="time_event">Time</string>
+    <string name="title_event">Occasion</string>
+    <string name="place_event">Where</string>
 </resources>

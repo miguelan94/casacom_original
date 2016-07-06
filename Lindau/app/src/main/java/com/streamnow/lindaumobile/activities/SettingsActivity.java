@@ -3,7 +3,9 @@ package com.streamnow.lindaumobile.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Contacts;
 import android.provider.ContactsContract;
@@ -153,7 +155,10 @@ public class SettingsActivity extends Activity {
 
         }else if(position==3){//shopping
 
-            RequestParams requestParams = new RequestParams();
+            Intent i = new Intent(SettingsActivity.this,EventActivity.class);
+            startActivity(i);
+
+            /*RequestParams requestParams = new RequestParams();
             //requestParams.add("access_token",sessionUser.accessToken);
             LDConnection.post("getNotifications", requestParams, new JsonHttpResponseHandler()
             {
@@ -180,7 +185,7 @@ public class SettingsActivity extends Activity {
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     System.out.println("login onFailure json");
                 }
-            });
+            });*/
         }
     }
     @Override
@@ -191,7 +196,27 @@ public class SettingsActivity extends Activity {
                 // The user picked a contact.
                 // The Intent's data Uri identifies which contact was selected.
                 // Do something with the contact here (bigger example below)
-
+                Uri contactData = data.getData();
+                Cursor cursor = null;
+                try {
+                    cursor = this.getContentResolver().query(contactData, null, null, null, null);
+                    int contactIdIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID);
+                    int nameIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+                    int phoneNumberIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                    cursor.moveToFirst();
+                    do {
+                        String idContact = cursor.getString(contactIdIdx);
+                        String name = cursor.getString(nameIdx);
+                        System.out.println(name);
+                        String phoneNumber = cursor.getString(phoneNumberIdx);
+                    } while (cursor.moveToNext());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (cursor != null) {
+                        cursor.close();
+                    }
+                }
             }
         }
     }

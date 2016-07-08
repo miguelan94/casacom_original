@@ -17,8 +17,8 @@ public class Lindau extends Application
 {
     private static Lindau sharedInstance;
 
-    public String appId = "com.streamnow.lindaumobile";
-    //public String appId = "com.streamnow.lsmobile";
+    //public String appId = "com.streamnow.lindaumobile";
+    public String appId = "com.streamnow.lsmobile";
     public String appDemoAccount = "demo.lindau";
 
     private LDSessionUser currentSessionUser;

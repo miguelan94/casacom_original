@@ -1,13 +1,25 @@
 package com.streamnow.lindaumobile.activities;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -27,7 +39,7 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-public class EventActivity extends BaseActivity {
+public class EventActivity extends BaseActivity implements View.OnClickListener {
 
     private ProgressDialog progressDialog;
     private ArrayList<LDEvents> events;
@@ -85,32 +97,33 @@ public class EventActivity extends BaseActivity {
        // tableLayout.addView(tableRow0);
         for (int i = 0; i < events.size(); i++) {
             TableRow tbrow = new TableRow(this);
+            tbrow.setTag(i);
             tbrow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-            tbrow.setPadding(0,25,0,25);
+            tbrow.setPadding(0,35,0,35);
             TextView t1v = new TextView(this);
             t1v.setPadding(3,3,3,3);
-            t1v.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+            t1v.setTextSize(TypedValue.COMPLEX_UNIT_SP,13);
             t1v.setText(events.get(i).date);
             t1v.setTextColor(Color.BLACK);
             t1v.setGravity(Gravity.CENTER);
             tbrow.addView(t1v);
             TextView t2v = new TextView(this);
             t2v.setPadding(3,3,3,3);
-            t2v.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+            t2v.setTextSize(TypedValue.COMPLEX_UNIT_SP,13);
             t2v.setText(events.get(i).time);
             t2v.setTextColor(Color.BLACK);
             t2v.setGravity(Gravity.CENTER);
             tbrow.addView(t2v);
             TextView t3v = new TextView(this);
             t3v.setPadding(3,3,3,3);
-            t3v.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+            t3v.setTextSize(TypedValue.COMPLEX_UNIT_SP,13);
             t3v.setText(events.get(i).title);
             t3v.setTextColor(Color.BLACK);
             t3v.setGravity(Gravity.CENTER);
             tbrow.addView(t3v);
             TextView t4v = new TextView(this);
             t4v.setPadding(3,3,3,3);
-            t4v.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+            t4v.setTextSize(TypedValue.COMPLEX_UNIT_SP,13);
             t4v.setText(events.get(i).place);
             t4v.setTextColor(Color.BLACK);
             t4v.setGravity(Gravity.CENTER);
@@ -121,13 +134,59 @@ public class EventActivity extends BaseActivity {
             line.setPadding(5,0,5,0);
             tableLayout.addView(tbrow);
             tableLayout.addView(line);
+            tbrow.setOnClickListener(this);
         }
     }
+
+    @Override
+    public void onClick(View v) {
+
+        int position = (int)v.getTag();
+        showPopUp(position);
+
+    }
+
+    private void showPopUp(int position){
+/*
+        TextView textView = new TextView(this);
+        final LinearLayout layout = new LinearLayout(this);
+        layout.setPadding(30,30,20,20);
+
+        layout.setOrientation(LinearLayout.VERTICAL);
+        textView.setText("Create date: " + events.get(position).create_date + "\n"
+            + "Date: " + events.get(position).date + "\n"
+            + "Time: " + events.get(position).time + "\n"
+            + "Title: " + events.get(position).title + "\n"
+            + "Description: " + events.get(position).description + "\n"
+            + "Place: " + events.get(position).place);
+        layout.addView(textView);
+        setContentView(layout);
+
+*/
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.app_name)
+                .setMessage("Create date: " + events.get(position).create_date + "\n"
+                        + "\nDate: " + events.get(position).date + "\n"
+                        + "\nTime: " + events.get(position).time + "\n"
+                        + "\nTitle: " + events.get(position).title + "\n"
+                        + "\nDescription: " + events.get(position).description + "\n"
+                        + "\nPlace: " + events.get(position).place)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which) {}
+                })
+                .show();
+
+
+    }
+
+
     private class ResponseHandlerJson extends JsonHttpResponseHandler
     {
         @Override
         public void onSuccess(int statusCode, Header[] headers, JSONObject response)
         {
+            //System.out.println("Events " + response.toString());
             try
             {
                events  = LDEvents.eventsFromArray(response.getJSONArray("notifications"));

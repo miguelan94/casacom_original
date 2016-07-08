@@ -1,7 +1,9 @@
 package com.streamnow.lindaumobile.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.Image;
@@ -69,49 +71,12 @@ public class SettingsActivity extends Activity {
                 menuItemClicked(position);
             }
         });
-
-
-
     }
 
     private void menuItemClicked(int position){
         if(position==0){ //profile clicked
             Intent i = new Intent(this,ProfileActivity.class);
             startActivity(i);
-
-
-
-            //progressDialog = ProgressDialog.show(this, getString(R.string.app_name), getString(R.string.please_wait), true);
-           /* RequestParams requestParams = new RequestParams();
-            requestParams.add("uid", sessionUser.deviceSessionId);
-            //requestParams.add("password", "");
-            requestParams.add("source", "Mobile");
-
-            LDConnection.post("auth/login", requestParams, new JsonHttpResponseHandler()
-            {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response)
-                {
-                     Log.d("JSON", "JSONObject OK: " + response.toString());
-
-
-
-
-                    progressDialog.dismiss();
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
-                    System.out.println("login onFailure throwable: " + throwable.toString() + " status code = " + statusCode);
-                    progressDialog.dismiss();
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    System.out.println("login onFailure json");
-                    progressDialog.dismiss();
-                }
-            });*/
 
         }else if(position==1){//contacts
 
@@ -121,13 +86,11 @@ public class SettingsActivity extends Activity {
         }else if(position==2){//logout
 
             RequestParams requestParams = new RequestParams();
-           // requestParams.add("access_token", sessionUser.accessToken);
             LDConnection.get("logout", requestParams, new JsonHttpResponseHandler()
             {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response)
                 {
-                    //Log.d("JSON", "JSONObject OK: " + response.toString());
                     try{
                         if(response.getString("msg").equals("Logout OK")){
                             Intent i = new Intent(SettingsActivity.this,LoginActivity.class);
@@ -138,8 +101,6 @@ public class SettingsActivity extends Activity {
                     catch (JSONException e){
                         e.printStackTrace();
                     }
-                    System.out.println("response: " + response.toString());
-
                 }
 
                 @Override
@@ -153,49 +114,14 @@ public class SettingsActivity extends Activity {
                 }
             });
 
-        }else if(position==3){//shopping
-
-            Intent i = new Intent(SettingsActivity.this,EventActivity.class);
-            startActivity(i);
-
-            /*RequestParams requestParams = new RequestParams();
-            //requestParams.add("access_token",sessionUser.accessToken);
-            LDConnection.post("getNotifications", requestParams, new JsonHttpResponseHandler()
-            {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response)
-                {
-                    System.out.println("Respuesta: " + response.toString());
-                    try{
-                        if(response.getString("status").equals("ok")){
-
-                        }
-                    }catch (JSONException e){
-                        e.printStackTrace();
-                    }
-
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
-                    System.out.println("login onFailure throwable: " + throwable.toString() + " status code = " + statusCode);
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    System.out.println("login onFailure json");
-                }
-            });*/
-        }
+        }else if(position==3){}//shopping
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode,Intent data){
 
         if (requestCode == PICK_CONTACT_REQUEST) {
             if (resultCode == RESULT_OK) {
-                // The user picked a contact.
-                // The Intent's data Uri identifies which contact was selected.
-                // Do something with the contact here (bigger example below)
+
                 Uri contactData = data.getData();
                 Cursor cursor = null;
                 try {
@@ -207,7 +133,6 @@ public class SettingsActivity extends Activity {
                     do {
                         String idContact = cursor.getString(contactIdIdx);
                         String name = cursor.getString(nameIdx);
-                        System.out.println(name);
                         String phoneNumber = cursor.getString(phoneNumberIdx);
                     } while (cursor.moveToNext());
                 } catch (Exception e) {

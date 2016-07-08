@@ -191,7 +191,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    System.out.println("onFailure json");
+                    System.out.println("onFailure json" + errorResponse.toString());
                 }
 
                 @Override
@@ -257,8 +257,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener
         {
             username = Lindau.getInstance().appDemoAccount;
             password = Lindau.getInstance().appDemoAccount;
-            //username = "lfabo";
-            //password = "12345678";
         }
         else
         {

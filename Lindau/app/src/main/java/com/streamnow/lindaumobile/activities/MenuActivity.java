@@ -1,10 +1,13 @@
 package com.streamnow.lindaumobile.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -67,40 +70,6 @@ public class MenuActivity extends BaseActivity
         else
         {
             adapterArray = sessionUser.getAvailableServicesForCategoryId(categoryId);
-            if(categoryId.equals("5")){
-
-
-
-
-
-           /* RequestParams requestParams = new RequestParams();
-            requestParams.add("appId","5033d287e70e42f0a5a9f44001cb2d");
-            requestParams.add("userId",getIntent().getStringExtra("user_vodka"));
-            requestParams.add("password",getIntent().getStringExtra("pass_vodka"));
-            LDConnection.post("https://project-test.streamnow.ch/external/client/core/Login.do?",requestParams,new JsonHttpResponseHandler(){
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response)
-                {
-                    ///obtenemos token y url
-
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    System.out.println("onFailure json");
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                    System.out.println("onFailure array");
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
-                    System.out.println("get token KO: " + throwable.toString() + " status code = " + statusCode + " responseString = " + response);
-                }
-            });*/
-            }
         }
 
 
@@ -108,15 +77,23 @@ public class MenuActivity extends BaseActivity
         RelativeLayout mainBackground = (RelativeLayout) findViewById(R.id.main_menu_background);
         //mainBackground.setBackgroundColor(sessionUser.userInfo.partner.colorTop);
         mainBackground.setBackgroundColor(sessionUser.userInfo.partner.backgroundColorSmartphone);
+
         ImageView imageView = (ImageView)findViewById(R.id.settings_ico); //icono settings
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MenuActivity.this,SettingsActivity.class);
-                i.putExtra("main_menu",true);
-                startActivity(i);
-            }
-        });
+        if(!getIntent().getBooleanExtra("sub_menu",false)){
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(MenuActivity.this,SettingsActivity.class);
+                    i.putExtra("main_menu",true);
+                    startActivity(i);
+                }
+            });
+        }
+        else{
+            imageView.setVisibility(View.GONE);
+        }
+
+
 
         final ListView listView = (ListView) findViewById(R.id.main_menu_list_view);
         listView.setAdapter(new MenuAdapter(this, adapterArray));
@@ -139,6 +116,8 @@ public class MenuActivity extends BaseActivity
 
         if( getIntent().getBooleanExtra("sub_menu", false) ) //si true
         {
+
+
             services = sessionUser.getAvailableServicesForCategoryId(categoryId);
             final LDService service = (LDService) services.get(position);
 
@@ -208,19 +187,6 @@ public class MenuActivity extends BaseActivity
                     startActivity(intent);
                 }
 
-                /*if(service.id.equals("29")){ //Tv
-
-                }
-                else if(service.id.equals("57")){ //music
-
-                }
-                else if(service.id.equals("59")){ //tv on demand
-
-                }
-                else if(service.id.equals("60")){ //my recordings
-
-                }*/
-
             }
             else if (service.type.equals("3"))
             {
@@ -228,6 +194,13 @@ public class MenuActivity extends BaseActivity
                 Intent intent = new Intent(this, WebViewActivity.class);
                 intent.putExtra("api_url", "https://m.youtube.com/watch?v=" + service.apiUrl);
                 startActivity(intent);
+            }
+            else if(service.type.equals("1")){
+                if(service.id.equals("22")){//events
+                    Intent i = new Intent(this,EventActivity.class);
+                    startActivity(i);
+
+                }
             }
         }
         else
@@ -272,51 +245,57 @@ public class MenuActivity extends BaseActivity
             }
             else if (services.size() > 1)
             {
-
                 final Intent intent = new Intent(this, MenuActivity.class);
                 intent.putExtra("category_id", sessionUser.categories.get(position).id);
                 intent.putExtra("sub_menu", true);
                 if(sessionUser.categories.get(position).id.equals("5")){//entertainment
 
-                    final RequestParams requestParams = new RequestParams("access_token",sessionUser.accessToken);
-                    LDConnection.get("myentertainment/getCredentials",requestParams,new JsonHttpResponseHandler(){
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response)
-                        {
-                            //Obtenemos username y password
-                            System.out.println("response:----" + response.toString());
-                            try{
-                                if(response.getJSONObject("status").getString("status").equals("ok")){
-                                     intent.putExtra("user_vodka",response.getJSONObject("status").getJSONObject("credentials").getString("username"));
-                                     intent.putExtra("pass_vodka",response.getJSONObject("status").getJSONObject("credentials").getString("password"));
+                    if(Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP || Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1){ //API 21-22
+                        showAlertDialog("This functionality does not work with Android 5.x");
+                    }
+                    else{
+                        final RequestParams requestParams = new RequestParams("access_token",sessionUser.accessToken);
+                        LDConnection.get("myentertainment/getCredentials",requestParams,new JsonHttpResponseHandler(){
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response)
+                            {
+                                //Obtenemos username y password
+                                System.out.println("response:----" + response.toString());
+                                try{
+                                    if(response.getJSONObject("status").getString("status").equals("ok")){
+                                        intent.putExtra("user_vodka",response.getJSONObject("status").getJSONObject("credentials").getString("username"));
+                                        intent.putExtra("pass_vodka",response.getJSONObject("status").getJSONObject("credentials").getString("password"));
+                                    }
+                                    else{
+                                        System.out.println("response is not ok");
+                                    }
+                                    startActivity(intent);
+
                                 }
-                                else{
-                                    System.out.println("response is not ok");
+                                catch (JSONException e){
+                                    e.printStackTrace();
                                 }
-                                startActivity(intent);
 
                             }
-                            catch (JSONException e){
-                               e.printStackTrace();
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                System.out.println("onFailure json");
                             }
 
-                        }
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                                System.out.println("onFailure array");
+                            }
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                            System.out.println("onFailure json");
-                        }
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
+                                System.out.println("getCredentials KO: " + throwable.toString() + " status code = " + statusCode + " responseString = " + response);
+                            }
+                        });
+                    }
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                            System.out.println("onFailure array");
-                        }
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
-                            System.out.println("getCredentials KO: " + throwable.toString() + " status code = " + statusCode + " responseString = " + response);
-                        }
-                    });
                 }
                 else{
                     startActivity(intent);
@@ -324,5 +303,16 @@ public class MenuActivity extends BaseActivity
 
             }
         }
+    }
+    private void showAlertDialog(String msg){
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.app_name)
+                .setMessage(msg)
+                .setIcon(R.mipmap.ic_launcher)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which) {}
+                })
+                .show();
     }
 }
